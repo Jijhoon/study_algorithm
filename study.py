@@ -1,32 +1,11 @@
-def fibo_recursion(number: int) -> int: # 재귀함수를 사용한 피보나치 수열
-    """
-    fibonacci function by recursion.
-    :param number: integer number
-    :return: integer number
-    """
-    if number == 0:
-        return 0
-    elif number == 1:
-        return 1
-    else:
-        return fibo_recursion(number - 1) + fibo_recursion(number - 2)
+import tkinter as tk
+# memo = [0 if i == 0 else 1 if i == 1 else None for _ in range(100)]
+memo = [0, 1] + [None] * (100 - 1)
 
 
-def fibo_repetition(number: int) -> int: # 반복문을 사용한 피보나치 수열
-    """
-    fibonacci function by repetition.
-    :param number: integer number
-    :return: integer number
-    """
-    a = 0
-    b = 1
-    for _ in range(number):
-        a, b = b, a + b
-    return a
-
-
-memo = [None for _ in range(100)] #
-def fibo_memoization(number: int) -> int: # 동적프로그래밍: 공간이 소모되더라도 프로그램의 속도를 높이기 위해 사용
+def fibo_memoization(
+    number: int,
+) -> int:  # 동적프로그래밍: 공간이 소모되더라도 프로그램의 속도를 높이기 위해 사용
     """
     fibonacci function by recursion with memoization.
     :param number: integer number
@@ -35,25 +14,32 @@ def fibo_memoization(number: int) -> int: # 동적프로그래밍: 공간이 소
     global memo
     if memo[number] is not None:
         return memo[number]
-    if number < 2:
-        result = number
-    else:
-        result = fibo_memoization(number-1) + fibo_memoization(number-2)
-        memo[number] = result
+    result = fibo_memoization(number - 1) + fibo_memoization(number - 2)
+    memo[number] = result
     return result
 
+def process_fibonacci():
+    number = int(en_input_numver.get())
+    lbl_display_fibonacci_result.config(text=f"fibo({number}) = {fibo_memoization(number)}")
 
 
-n = int(input("Input number : "))
+if __name__ == '__main__':
+    w = tk.Tk() # create window object
+    w.title('Fibonacci by memoization') # set title
+    w.geometry('400x200') # set size
 
-for i in range(0, n):
-    print(i)
-    print(fibo_memoization(i))
-print("===========================")
-for i in range(0, n):
-    print(i)
-    print(fibo_recursion(i))
-print("===========================")
-for i in range(0, n):
-    print(i)
-    print(fibo_repetition(i))
+    #create widgets
+    lbl_display_fibonacci_result = tk.Label(w, text='Fibonacci by memorizaiton')
+    en_input_numver = tk.Entry(w)
+    btn_click = tk.Button(w, text='Click', command=process_fibonacci)
+    
+    #layout
+    lbl_display_fibonacci_result.pack()
+    en_input_numver.pack(fill='x')
+    btn_click.pack(fill='x')
+
+    en_input_numver.focus_set()
+    w.mainloop()
+
+# n = int(input("Input number : "))
+# print(f'f({n}) = {fibo_memoization(n)}')
